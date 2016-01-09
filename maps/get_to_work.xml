@@ -72,22 +72,10 @@
       <initial-robot originOffsetX="2" originOffsetY="26" type="ARCHON" team="A"/>
       <initial-robot originOffsetX="2" originOffsetY="27" type="ARCHON" team="A"/>
       <initial-robot originOffsetX="2" originOffsetY="28" type="ARCHON" team="A"/>
-      <initial-robot originOffsetX="4" originOffsetY="26" type="GUARD" team="A"/>
-      <initial-robot originOffsetX="4" originOffsetY="27" type="GUARD" team="A"/>
-      <initial-robot originOffsetX="4" originOffsetY="28" type="GUARD" team="A"/>
-      <initial-robot originOffsetX="5" originOffsetY="26" type="GUARD" team="A"/>
-      <initial-robot originOffsetX="5" originOffsetY="27" type="GUARD" team="A"/>
-      <initial-robot originOffsetX="5" originOffsetY="28" type="GUARD" team="A"/>
       <initial-robot originOffsetX="8" originOffsetY="7" type="ZOMBIEDEN" team="ZOMBIE"/>
       <initial-robot originOffsetX="12" originOffsetY="20" type="ZOMBIEDEN" team="ZOMBIE"/>
       <initial-robot originOffsetX="17" originOffsetY="9" type="ZOMBIEDEN" team="ZOMBIE"/>
       <initial-robot originOffsetX="21" originOffsetY="22" type="ZOMBIEDEN" team="ZOMBIE"/>
-      <initial-robot originOffsetX="24" originOffsetY="1" type="GUARD" team="B"/>
-      <initial-robot originOffsetX="24" originOffsetY="2" type="GUARD" team="B"/>
-      <initial-robot originOffsetX="24" originOffsetY="3" type="GUARD" team="B"/>
-      <initial-robot originOffsetX="25" originOffsetY="1" type="GUARD" team="B"/>
-      <initial-robot originOffsetX="25" originOffsetY="2" type="GUARD" team="B"/>
-      <initial-robot originOffsetX="25" originOffsetY="3" type="GUARD" team="B"/>
       <initial-robot originOffsetX="27" originOffsetY="1" type="ARCHON" team="B"/>
       <initial-robot originOffsetX="27" originOffsetY="2" type="ARCHON" team="B"/>
       <initial-robot originOffsetX="27" originOffsetY="3" type="ARCHON" team="B"/>
