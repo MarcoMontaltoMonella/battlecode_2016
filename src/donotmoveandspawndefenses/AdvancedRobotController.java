@@ -19,8 +19,24 @@ public class AdvancedRobotController implements RobotController {
 		return rc.senseNearbyRobots(rc.getType().sensorRadiusSquared, rc.getTeam());
 	}
 	
+	public RobotInfo[] senseAlliesWhoNeedsToBeRepaired(){
+		return rc.senseNearbyRobots(rc.getType().attackRadiusSquared, rc.getTeam());
+	}
+	
 	public RobotInfo[] senseAlliesAroundMe(){
 		return rc.senseNearbyRobots(2, rc.getTeam());
+	}
+	
+	public RobotInfo[] senseNeutralRobots(){
+		return rc.senseNearbyRobots(rc.getType().sensorRadiusSquared, Team.NEUTRAL);
+	}
+	
+	public MapLocation getAdjacentNeutralBotLocation(){
+		RobotInfo[] adjNeutral = rc.senseNearbyRobots(2, Team.NEUTRAL);
+		if(adjNeutral.length>0){
+			return adjNeutral[0].location;
+		}
+		return null;
 	}
 	
 	public Signal readAllySignal(){
@@ -28,6 +44,36 @@ public class AdvancedRobotController implements RobotController {
 		if(s != null && s.getTeam()==rc.getTeam())
 			return s;	
 		return null;
+	}
+	
+	public boolean hasFullHealth(){
+		return rc.getHealth()==rc.getType().maxHealth;
+	}
+	
+	public void moveToLocation(MapLocation location) throws GameActionException {
+		Direction directionToLocation = rc.getLocation().directionTo(location);
+		Movement.moveForwardish(directionToLocation,this);
+	}
+	
+	public MapLocation locationOfNearbyFriendInDanger() {
+		MapLocation location = null;
+		RobotInfo[] alliesInSight = rc.senseNearbyRobots(rc.getType().sensorRadiusSquared, rc.getTeam());
+		for(RobotInfo r : alliesInSight){
+			if(r.maxHealth-r.health>0){
+				location = r.location;
+				break;
+			}
+		}
+		return location;
+	}
+	
+	/**
+	 * 
+	 * @return a percentage: death is 0.0, full-health is 1.0
+	 */
+	public double getRelativeLife(){
+		double maxH = rc.getType().maxHealth;
+		return (maxH - rc.getHealth() )/maxH;
 	}
 	
 	
@@ -273,5 +319,10 @@ public class AdvancedRobotController implements RobotController {
 	@Override
 	public void unpack() throws GameActionException {
 		rc.unpack();
+	}
+
+	@Override
+	public MapLocation[] sensePartLocations(int radiussquared) {
+		return rc.sensePartLocations(radiussquared);
 	}
 }
