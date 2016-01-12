@@ -25,7 +25,7 @@ public class GuardBot {
 							if(rc.isWeaponReady() && rc.canAttackLocation(enemyLocation)){
 								rc.attackLocation(enemyLocation);
 							}
-						} else if((Utility.canAttackMeFromAfar(r) && !rc.isIsolated()) || Utility.isAnArchon(r)){ 
+						} else if((Utility.canAttackMeFromAfarOrZombieDen(r) && !rc.isIsolated()) || Utility.isAnArchon(r)){ 
 							// attack it if it's ranged, but not alone.
 							if(rc.isCoreReady()){
 								rc.moveToLocation(enemyLocation);

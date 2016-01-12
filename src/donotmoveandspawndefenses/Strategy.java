@@ -3,6 +3,7 @@ package donotmoveandspawndefenses;
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
 import battlecode.common.MapLocation;
+import battlecode.common.RobotType;
 import battlecode.common.Signal;
 
 public class Strategy {
@@ -38,32 +39,57 @@ public class Strategy {
 		switch(ordersDictionary[orderKey]){
 		case KEEP_MOVING_FOWARD_2:
 			
-			// GREEN LINE AND DOT ON COMMANDER
-			rc.setIndicatorLine(orderSentFromLocation, rc.getLocation(), 0, 255, 0);
-			rc.setIndicatorDot(orderSentFromLocation, 0, 255, 0);
+			boolean result_tmkfieos = false;
+			if(rc.getType()==RobotType.TURRET){
+				result_tmkfieos = turretsMustKeepFiringIfEnemiesOnSight();
+			}
 			
-			rc.setIndicatorString(0, "I am going "+commanderDirection.opposite());
-			
-			Movement.moveForwardish(commanderDirection.opposite(), rc);
+			if(!result_tmkfieos){
+				// GREEN LINE AND DOT ON COMMANDER
+				rc.setIndicatorLine(orderSentFromLocation, rc.getLocation(), 0, 255, 0);
+				rc.setIndicatorDot(orderSentFromLocation, 0, 255, 0);
+				
+				rc.setIndicatorString(0, "I am going "+commanderDirection.opposite());
+				
+				Movement.moveForwardish(commanderDirection.opposite(), rc);
+			}
 			break;
 		case GATHER_1:
-			int currentRound = rc.getRoundNum();
-			if(lastRescueOperationTurn == 0 || (currentRound-RESCUE_OPERATION_DELAY>lastRescueOperationTurn)){
-				lastRescueOperationTurn = currentRound;
+			
+			result_tmkfieos = false;
+			if(rc.getType()==RobotType.TURRET){
+				result_tmkfieos = turretsMustKeepFiringIfEnemiesOnSight();
+			}
+			
+			if(!result_tmkfieos){
 				
-				// BLUE LINE
-				rc.setIndicatorLine(orderSentFromLocation, rc.getLocation(), 0, 0, 255);
-				rc.setIndicatorString(0, "I am going "+commanderDirection);
-				
-				Movement.moveForwardish(commanderDirection, rc);
+				int currentRound = rc.getRoundNum();
+				if(lastRescueOperationTurn == 0 || (currentRound-RESCUE_OPERATION_DELAY>lastRescueOperationTurn)){
+					lastRescueOperationTurn = currentRound;
+					
+					// BLUE LINE
+					rc.setIndicatorLine(orderSentFromLocation, rc.getLocation(), 0, 0, 255);
+					rc.setIndicatorString(0, "I am going "+commanderDirection);
+					
+					Movement.moveForwardish(commanderDirection, rc);
+				}
 			}
 			break;
 		case STEP_AHEAD_0:
 		
 			break;
 		default:
+			// Move Viper towards a spotted enemy
+			if(rc.getType()==RobotType.VIPER){
+				MapLocation enemySpottedLocation = new MapLocation(orderKey, orderValue);
+				Movement.moveForwardish(rc.getLocation().directionTo(enemySpottedLocation), executor);
+			}
 			break;
 		}
+	}
+	
+	private static boolean turretsMustKeepFiringIfEnemiesOnSight(){
+		return (rc.senseHostileRobots(rc.getLocation(), RobotType.TURRET.sensorRadiusSquared).length > 0);
 	}
 	
 	public static void listenToOrders(AdvancedRobotController listener) throws GameActionException {

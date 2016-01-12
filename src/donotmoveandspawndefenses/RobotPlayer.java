@@ -19,14 +19,25 @@ public class RobotPlayer {
 			GuardBot.guardCode(rc);
 		} else if(rc.getType()==RobotType.SCOUT){
 			// Scout code
+			ScoutBot.scoutCode(rc);
 		} else if(rc.getType()==RobotType.SOLDIER){
 			// Soldier code
+			SoldierBot.soldierCode(rc);
 		} else if(rc.getType()==RobotType.VIPER){
 			// Viper code
-		} else if(rc.getType()==RobotType.TURRET){
-			// Turret code
-		} else if(rc.getType()==RobotType.TTM){
-			// TTM code
+			ViperBot.viperCode(rc);
+		} else {
+			
+			// Avoiding the return, and making the switching possible.
+			while(true){
+				if(rc.getType()==RobotType.TURRET){
+					// Turret code
+					TurretBot.turretCode(rc);
+				} else if(rc.getType()==RobotType.TTM){
+					// TTM code
+					TTMBot.ttmCode(rc);
+				}
+			}
 		}
 	}	
 	

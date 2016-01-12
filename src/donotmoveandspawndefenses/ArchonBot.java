@@ -1,8 +1,6 @@
 package donotmoveandspawndefenses;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
 
 import battlecode.common.Clock;
 import battlecode.common.Direction;
@@ -20,6 +18,7 @@ public class ArchonBot {
 	static int spawnedUnits;
 	static Direction lastDirectionOppositeToAttack = Direction.NONE;
 	static ArrayList<MapLocation> partsLocationsDetected = new ArrayList<MapLocation>();
+	static final double A_LOT_OF_PARTS = 150.0;
 	
 	
 	public static void archonCode(AdvancedRobotController rcIn){	
@@ -28,15 +27,24 @@ public class ArchonBot {
 		
 		while(true){
 			try{
+				
+				int currentTurn = rc.getRoundNum();
 			
 			if(rc.senseAlliesAroundMe().length > 4){
 				leaveSomeSpaceAroundMe();
 			}
 			
+			boolean result_sguards = false;
+//			boolean result_sturrets = false;
+//			result_sturrets = spawnTurrets(); 
 			
-			if(spawnGuards()){
-				// guard spawned!
-			} else {	
+			if(Math.random() < 0.96){
+				result_sguards = spawnGuards();
+			} else {
+				result_sguards = tryToSpawn(RobotType.VIPER);
+			}
+			
+			if(!result_sguards){
 				MapLocation cl = rc.getLocation();
 				boolean result_lfacp = false;
 				boolean result_lfara = false;
@@ -97,6 +105,56 @@ public class ArchonBot {
 		
 	}
 	
+	@SuppressWarnings("unused")
+	private static boolean spawnTurrets() throws GameActionException {
+
+		if(rc.isCoreReady()){
+			MapLocation currentLocation = rc.getLocation();
+			
+			// if we can build
+			if(rc.hasBuildRequirements(RobotType.TURRET)){
+				
+				for(Direction d : Direction.values()){
+					if(rc.isLocationOccupied(currentLocation.add(d))){
+						continue;
+					}
+					if(rc.canBuild(d, RobotType.TURRET) && ( Math.random() >= 0.95) || rc.senseNearbyAllies().length<4){
+						rc.build(d, RobotType.TURRET);
+						spawnedUnits++;
+						return true;
+					}
+				}
+			
+			}
+		}
+		return false;
+	}
+	
+	@SuppressWarnings("unused")
+	private static boolean tryToSpawn(RobotType rt) throws GameActionException {
+
+		if(rc.isCoreReady()){
+			MapLocation currentLocation = rc.getLocation();
+			
+			// if we can build
+			if(rc.hasBuildRequirements(rt)){
+				
+				for(Direction d : Direction.values()){
+					if(rc.isLocationOccupied(currentLocation.add(d))){
+						continue;
+					}
+					if(rc.canBuild(d, rt) && ( Math.random() >= 0.95) || rc.senseNearbyAllies().length<4){
+						rc.build(d, rt);
+						spawnedUnits++;
+						return true;
+					}
+				}
+			
+			}
+		}
+		return false;
+	}
+
 	private static void lookForAndActivateNeutralRobots() throws GameActionException {
 		RobotInfo[] neutralInSight = rc.senseNeutralRobots();
 		if(neutralInSight.length>0){
